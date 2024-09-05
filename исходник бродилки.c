@@ -4,22 +4,9 @@
 #include <stdbool.h>
 #define string(x) char x[]
 
-int gameover?(vragY,vragX,playery,playerx)
-{
-        if(vragY==playery && vragX==playerx)
-                {
-                        printf("\033[0d\033[2J");
-                        printf("game over");
-                        return 0;
-                }
-}
-int main(void)
-{
-        srand(time(NULL));
-        char playerData=0;
-        char capY=5,capX=25,cap='$';
-        char playerY=1, playerX=1, player='@';
-        char map[10][30]={{'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
+bool gamestutas=true;
+
+char map[10][30]={{'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
                           {'#',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
                           {'#',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
                           {'#',' ','#','#',' ',' ',' ',' ','#',' ','#','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
@@ -30,7 +17,61 @@ int main(void)
                           {'#',' ',' ',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
                           {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'}};
 
-        while(true)
+
+int bot(int* vragY,int* vragX )
+{
+        map[(*vragY)][(*vragX)]=' ';
+        switch ((rand()%4))
+                {
+                case 1:
+                if(map[(*vragY)-1][(*vragX)]!='#')
+                {
+                        (*vragY)-=1;
+                }
+                break;
+
+                case 2:
+                if(map[(*vragY)+1][(*vragX)]!='#')
+                {
+                        (*vragY)+=1;
+                }
+                break;
+
+                case 3:
+                if(map[(*vragY)][(*vragX)-1]!='#')
+                {
+                        (*vragX)-=1;
+                }
+                break;
+
+                case 0:
+                if(map[(*vragY)][(*vragX)+1]!='#')
+                {
+                        (*vragX)+=1;
+                }
+                break;
+                }
+}
+
+void gameover(int vragY,int vragX,int playery,int playerx)
+{
+        if(vragY==playery && vragX==playerx)
+                {
+                        printf("\033[0d\033[2J");
+                        printf("game over\n");
+                        
+                        gamestutas=False;
+                }
+}
+int main(void)
+{
+        
+        srand(time(NULL));
+        char playerData=0;
+        int capY=5,capX=25,cap='$';
+        int playerY=1, playerX=1, player='@';
+        
+        while(gamestutas)
         {     
                 //отрисовка
                 printf("\033[0d\033[2J");
@@ -45,6 +86,7 @@ int main(void)
                 }
                 
                 
+
                 scanf(" %c",&playerData);//считавание стрелочки
                 
                 map[playerY] [playerX]=' ';
@@ -85,38 +127,8 @@ int main(void)
                 }
 
                 //управдение cap
-                map[capY] [capX]=' ';
-
-                switch ((rand()%4))
-                {
-                case 1:
-                if(map[capY-1][capX]!='#')
-                {
-                        capY-=1;
-                }
-                break;
-
-                case 2:
-                if(map[capY+1][capX]!='#')
-                {
-                        capY+=1;
-                }
-                break;
-
-                case 3:
-                if(map[capY][capX-1]!='#')
-                {
-                        capX-=1;
-                }
-                break;
-
-                case 0:
-                if(map[capY][capX+1]!='#')
-                {
-                        capX+=1;
-                }
-                break;
-                }
+                bot(&capY,&capX);
+                gameover(capY,capX,playerY,playerX);
                 
         } 
         
