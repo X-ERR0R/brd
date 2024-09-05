@@ -4,7 +4,15 @@
 #include <stdbool.h>
 #define string(x) char x[]
 
-
+int gameover?(vragY,vragX,playery,playerx)
+{
+        if(vragY==playery && vragX==playerx)
+                {
+                        printf("\033[0d\033[2J");
+                        printf("game over");
+                        return 0;
+                }
+}
 int main(void)
 {
         srand(time(NULL));
@@ -24,9 +32,6 @@ int main(void)
 
         while(true)
         {     
-                
-
-                main:
                 //отрисовка
                 printf("\033[0d\033[2J");
                 map[capY][capX]=cap;
@@ -39,11 +44,7 @@ int main(void)
                         printf("\n");
                 }
                 
-                if(capY==playerY && capX==playerX)
-                {
-                        printf("game over");
-                        return 0;
-                }
+                
                 scanf(" %c",&playerData);//считавание стрелочки
                 
                 map[playerY] [playerX]=' ';
