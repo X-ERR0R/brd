@@ -4,14 +4,9 @@
 #include <stdbool.h>
 #define string(x) char x[]
 
+bool gamestutas=true;
 
-int main(void)
-{
-        srand(time(NULL));
-        char playerData=0;
-        char capY=5,capX=25,cap='$';
-        char playerY=1, playerX=1, player='@';
-        char map[10][30]={{'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
+        int map[10][30]={{'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
                           {'#',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
                           {'#',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
                           {'#',' ','#','#',' ',' ',' ',' ','#',' ','#','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
@@ -21,16 +16,74 @@ int main(void)
                           {'#',' ',' ',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
                           {'#',' ',' ',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
                           {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'}};
+int addMapObject(int Y,int X,int symbol)
+{
+        map[Y][X]=symbol;
+}
 
-        while(true)
+int bot(int* vragY,int* vragX )
+{
+        map[(*vragY)][(*vragX)]=' ';
+        switch ((rand()%4))
+                {
+                case 1:
+                if(map[(*vragY)-1][(*vragX)]!='#')
+                {
+                        (*vragY)-=1;
+                }
+                break;
+
+                case 2:
+                if(map[(*vragY)+1][(*vragX)]!='#')
+                {
+                        (*vragY)+=1;
+                }
+                break;
+
+                case 3:
+                if(map[(*vragY)][(*vragX)-1]!='#')
+                {
+                        (*vragX)-=1;
+                }
+                break;
+
+                case 0:
+                if(map[(*vragY)][(*vragX)+1]!='#')
+                {
+                        (*vragX)+=1;
+                }
+                break;
+                }
+}
+
+void gameover(int vragY,int vragX,int playery,int playerx)
+{
+        if(vragY==playery && vragX==playerx)
+                {
+                        printf("\033[0d\033[2J");
+                        printf("game over\n");
+                        
+                        gamestutas=False;
+                }
+}
+int main(void)
+{
+        
+        srand(time(NULL));
+        char playerData=0;
+        int capY=5,capX=25,cap='$';
+        int twitch='!',twitchX=3,twitchY=7;
+        int playerY=1, playerX=1, player='@';
+        
+        while(gamestutas)
         {     
                 
-
-                main:
+                //добовление объектов на карту перед отрисовкой
+                addMapObject(capY,capX,cap);
+                addMapObject(playerY,playerX,player);
+                addMapObject(twitchY,twitchX,twitch);
                 //отрисовка
                 printf("\033[0d\033[2J");
-                map[capY][capX]=cap;
-                map[playerY][playerX]=player;
                 for(int i=0;i<(sizeof(map)/sizeof(map[0]));i++)
                 {
                         for(int j=0;j<(sizeof(map[0])/sizeof(map[0][0]));j++){
@@ -39,13 +92,11 @@ int main(void)
                         printf("\n");
                 }
                 
-                if(capY==playerY && capX==playerX)
-                {
-                        printf("game over");
-                        return 0;
-                }
+                
+
                 scanf(" %c",&playerData);//считавание стрелочки
                 
+                //очистака масива
                 map[playerY] [playerX]=' ';
 
                 
@@ -83,39 +134,12 @@ int main(void)
                 break;
                 }
 
-                //управдение cap
-                map[capY] [capX]=' ';
+                //управдение NPC
+                bot(&twitchY,&twitchX);
+                gameover(twitchY,twitchX,playerY,playerX);
 
-                switch ((rand()%4))
-                {
-                case 1:
-                if(map[capY-1][capX]!='#')
-                {
-                        capY-=1;
-                }
-                break;
-
-                case 2:
-                if(map[capY+1][capX]!='#')
-                {
-                        capY+=1;
-                }
-                break;
-
-                case 3:
-                if(map[capY][capX-1]!='#')
-                {
-                        capX-=1;
-                }
-                break;
-
-                case 0:
-                if(map[capY][capX+1]!='#')
-                {
-                        capX+=1;
-                }
-                break;
-                }
+                bot(&capY,&capX);
+                gameover(capY,capX,playerY,playerX);
                 
         } 
         
