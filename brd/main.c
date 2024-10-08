@@ -2,150 +2,124 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
+#include <stdarg.h>
 #define xmap 30
 #define ymap 10
 
-int addMapObject(int Y,int X,int symbol,int* ptr_map)
+void controlplayer(int* playerdata,int *Yplayer,int* Xplayer,int (*map)[xmap])
 {
-        char(*map)[xmap]=ptr_map;
-        map[Y][X]=symbol;
-}
+        scanf(" %c",playerdata);
 
-int bot(int* vragY,int* vragX,int* ptr_map )
-{
-        char(*map)[xmap]=ptr_map;
-        map[(*vragY)][(*vragX)]=' ';
-        switch ((rand()%4))
-                {
-                case 1:
-                if(map[(*vragY)-1][(*vragX)]!='#')
-                {
-                        (*vragY)-=1;
-                }
-                break;
-
-                case 2:
-                if(map[(*vragY)+1][(*vragX)]!='#')
-                {
-                        (*vragY)+=1;
-                }
-                break;
-
-                case 3:
-                if(map[(*vragY)][(*vragX)-1]!='#')
-                {
-                        (*vragX)-=1;
-                }
-                break;
-
-                case 0:
-                if(map[(*vragY)][(*vragX)+1]!='#')
-                {
-                        (*vragX)+=1;
-                }
-                break;
-                }
-}
-
-void gameover(int vragY,int vragX,int playery,int playerx,bool* gamestutas)
-{
-        if(vragY==playery && vragX==playerx)
-                {
-                        printf("\033[0d\033[2J");
-                        printf("game over\n");
-                        
-                        *gamestutas=False;
-                }
-}
-int main(void)
-{       
-        bool gamestutas=true;
-
-    int map[ymap][xmap]={{'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
-                         {'#',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
-                         {'#',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
-                         {'#',' ','#','#',' ',' ',' ',' ','#',' ','#','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
-                         {'#',' ',' ',' ',' ','#','#','#','#',' ','#',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
-                         {'#',' ',' ',' ',' ',' ',' ',' ','#',' ','#',' ',' ',' ','#',' ',' ','#','#','#','#','#',' ',' ',' ',' ',' ',' ',' ','#'},
-                         {'#',' ',' ',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ','#',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
-                         {'#',' ',' ',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
-                         {'#',' ',' ',' ','#',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
-                         {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'}};
-
-        
-        srand(time(NULL));
-        char playerData=0;
-        int capY=5,capX=25,cap='$';
-        int twitch='!',twitchX=3,twitchY=7;
-        int playerY=1, playerX=1, player='@';
-        
-        while(gamestutas)
-        {     
-                
-                //добовление объектов на карту перед отрисовкой
-                addMapObject(capY,capX,cap,map);
-                addMapObject(playerY,playerX,player,map);
-                addMapObject(twitchY,twitchX,twitch,map);
-                //отрисовка
-                printf("\033[0d\033[2J");
-                for(int i=0;i<(sizeof(map)/sizeof(map[0]));i++)
-                {
-                        for(int j=0;j<(sizeof(map[0])/sizeof(map[0][0]));j++){
-                                printf("%c",map[i][j]);
-                        }
-                        printf("\n");
-                }
-                
-                
-
-                scanf(" %c",&playerData);//считавание стрелочки
-                
-                //очистака масива
-                map[playerY] [playerX]=' ';
-
-                
-                
-
-                //управление персонажем
-                switch (playerData)
+        switch(*playerdata)
                 {
                 case 'w':
-                if(map[playerY-1][playerX]!='#')
-                {
-                        playerY-=1;
-                }
+                        if(map[*Yplayer-1][*Xplayer]!='#')
+                        *Yplayer-=1;
                 break;
 
                 case 's':
-                if(map[playerY+1][playerX]!='#')
-                {
-                        playerY+=1;
-                }
+                        if(map[*Yplayer+1][*Xplayer]!='#')
+                        *Yplayer+=1;
                 break;
 
                 case 'a':
-                if(map[playerY][playerX-1]!='#')
-                {
-                        playerX-=1;
-                }
+                        if(map[*Yplayer][*Xplayer-1]!='#')
+                        *Xplayer-=1;
                 break;
 
                 case 'd':
-                if(map[playerY][playerX+1]!='#')
-                {
-                        playerX+=1;
-                }
+                        if(map[*Yplayer][*Xplayer+1]!='#')
+                        *Xplayer+=1;
                 break;
                 }
+}
 
-                //управдение NPC
-                bot(&twitchY,&twitchX,map);
-                gameover(twitchY,twitchX,playerY,playerX,&gamestutas);
+void addmapobject(int Y,int X,int object,int (*map)[xmap])
+{
+        map[Y][X]=object;
+}
 
-                bot(&capY,&capX,map);
-                gameover(capY,capX,playerY,playerX,&gamestutas);
-                
-        } 
+void deletemapobject(int Y,int X,int (*map)[xmap])
+{
+        map[Y][X]=' ';
+}
+
+int render(int (*map)[xmap],int point/*кол-во аргументов далее*/,.../*symbol,Y,X*/)
+{
+        va_list ptr;
+        va_start(ptr,point);
+        
+        if(point%3!=0)
+        return 1;
+
+        for(int i=0;i<point;)
+        {
+                int symbol=va_arg(ptr,int);
+                i++;
+                int Y=va_arg(ptr,int);
+                i++;
+                int X=va_arg(ptr,int);
+                i++;
+                addmapobject(Y,X,symbol,map);
+        }
+
+        for(int i=0;i<ymap;i++)
+        {
+                for(int j=0;j<xmap;j++)
+                {
+                        printf("%c",map[i][j]);
+                }
+        printf("\n");
+        }
+
+        va_start(ptr,point);
+
+        for(int i=0;i<point;)
+        {
+                int symbol=va_arg(ptr,int);
+                i++;
+                int Y=va_arg(ptr,int);
+                i++;
+                int X=va_arg(ptr,int);
+                i++;
+                deletemapobject(Y,X,map);
+        }
+
         
         return 0;
+
+}
+
+
+int main(void)
+{
+        int map[ymap][xmap]={
+                             {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
+                             {'#',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
+                             {'#',' ',' ',' ',' ','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
+                             {'#',' ',' ',' ',' ',' ','#','#','#','#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
+                             {'#',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','#'},
+                             {'#',' ',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#','#'},
+                             {'#',' ',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#','#'},
+                             {'#',' ',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#','#'},
+                             {'#',' ',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#',' ','#','#'},
+                             {'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'}
+                            };
+        int
+        playerData=0,
+        player='@',
+        Xplayer=1,
+        Yplayer=1;
+
+        while(true)
+        {       
+                
+                if(render(map,3,player,Yplayer,Xplayer)!=0){printf("error render");return 1;}
+
+                controlplayer(&playerData,&Yplayer,&Xplayer,map);
+                
+                system("clear");
+
+                
+        }
 }
