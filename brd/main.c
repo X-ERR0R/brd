@@ -6,9 +6,9 @@
 #define xmap 30
 #define ymap 10
 
-void controlplayer(int* playerdata,int *Yplayer,int* Xplayer,int (*map)[xmap])
+int controlplayer(int* playerdata,int *Yplayer,int* Xplayer,int (*map)[xmap])
 {
-        scanf(" %c",playerdata);
+        scanf(" %c",(char*)playerdata);
 
         switch(*playerdata)
                 {
@@ -31,24 +31,31 @@ void controlplayer(int* playerdata,int *Yplayer,int* Xplayer,int (*map)[xmap])
                         if(map[*Yplayer][*Xplayer+1]!='#')
                         *Xplayer+=1;
                 break;
+                    
+                case 'x':
+                        return -1;
+                break;                    
                 }
+    return 0;
 }
 
-void addmapobject(int Y,int X,int object,int (*map)[xmap])
+int addmapobject(int Y,int X,int object,int (*map)[xmap])
 {
         map[Y][X]=object;
+    return 0;
 }
 
-void deletemapobject(int Y,int X,int (*map)[xmap])
+int deletemapobject(int Y,int X,int (*map)[xmap])
 {
         map[Y][X]=' ';
+    return 0;
 }
 
 int render(int (*map)[xmap],int point/*кол-во аргументов далее*/,.../*symbol,Y,X*/)
 {
         va_list ptr;
         va_start(ptr,point);
-        
+            
         if(point%3!=0)
         return 1;
 
@@ -62,7 +69,7 @@ int render(int (*map)[xmap],int point/*кол-во аргументов дале
                 i++;
                 addmapobject(Y,X,symbol,map);
         }
-
+         printf("exit q\n");
         for(int i=0;i<ymap;i++)
         {
                 for(int j=0;j<xmap;j++)
@@ -85,7 +92,7 @@ int render(int (*map)[xmap],int point/*кол-во аргументов дале
                 deletemapobject(Y,X,map);
         }
 
-        
+
         return 0;
 
 }
@@ -113,13 +120,14 @@ int main(void)
 
         while(true)
         {       
-                
+
                 if(render(map,3,player,Yplayer,Xplayer)!=0){printf("error render");return 1;}
 
-                controlplayer(&playerData,&Yplayer,&Xplayer,map);
-                
-                system("clear");
+                if(controlplayer(&playerData,&Yplayer,&Xplayer,map)==-1){printf("exit game");return -1;}
 
-                
+                printf("\033[0d\033[2J");
+
+
         }
+    return 0;
 }
