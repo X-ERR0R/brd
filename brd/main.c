@@ -6,7 +6,7 @@
 #define xmap 30
 #define ymap 10
 
-int controlplayer(int* playerdata,int *Yplayer,int* Xplayer,int (*map)[xmap])
+int entity_new(int* playerdata,int *Yplayer,int* Xplayer,int (*map)[xmap])
 {
         scanf(" %c",(char*)playerdata);
 
@@ -39,13 +39,13 @@ int controlplayer(int* playerdata,int *Yplayer,int* Xplayer,int (*map)[xmap])
     return 0;
 }
 
-int addmapobject(int Y,int X,int object,int (*map)[xmap])
+int add_map_object(int Y,int X,int object,int (*map)[xmap])
 {
         map[Y][X]=object;
     return 0;
 }
 
-int deletemapobject(int Y,int X,int (*map)[xmap])
+int delete_map_object(int Y,int X,int (*map)[xmap])
 {
         map[Y][X]=' ';
     return 0;
@@ -56,7 +56,7 @@ int render(int (*map)[xmap],int point/*кол-во аргументов дале
         va_list ptr;
         va_start(ptr,point);
             
-        if(point%3!=0)
+        if((point%3)!=0)
         return 1;
 
         for(int i=0;i<point;)
@@ -65,12 +65,15 @@ int render(int (*map)[xmap],int point/*кол-во аргументов дале
                 i++;
                 int Y=va_arg(ptr,int);
                 i++;
+                                        
                 int X=va_arg(ptr,int);
+                                        
                 i++;
-                addmapobject(Y,X,symbol,map);
+                if (Y < 1 || Y > (ymap-1) || X < 1 || X > (xmap-1)){return 2;}
+                add_map_object(Y,X,symbol,map);
         }
-         printf("exit q\n");
-        for(int i=0;i<ymap;i++)
+         printf("exit n\n");
+         for(int i=0;i<ymap;i++)
         {
                 for(int j=0;j<xmap;j++)
                 {
@@ -89,7 +92,7 @@ int render(int (*map)[xmap],int point/*кол-во аргументов дале
                 i++;
                 int X=va_arg(ptr,int);
                 i++;
-                deletemapobject(Y,X,map);
+                delete_map_object(Y,X,map);
         }
 
 
@@ -120,10 +123,14 @@ int main(void)
 
         while(true)
         {       
+                
+                char codeExit=render(map,3,player,Yplayer,Xplayer);
+                
+                if(codeExit==1){printf("error render\ncode=1\ninvalid input data");return 1;}
+                else if(codeExit==2){printf("error render\ncode=2\nleaving the playing field");return 2;}
+                
 
-                if(render(map,3,player,Yplayer,Xplayer)!=0){printf("error render");return 1;}
-
-                if(controlplayer(&playerData,&Yplayer,&Xplayer,map)==-1){printf("exit game");return -1;}
+                if(entity_new(&playerData,&Yplayer,&Xplayer,map)==-1){printf("exit game");return -1;}
 
                 printf("\033[0d\033[2J");
 
