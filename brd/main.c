@@ -3,33 +3,48 @@
 #include <time.h>
 #include <stdbool.h>
 #include <stdarg.h>
-#define xmap 30
+
 #define ymap 10
+#define xmap 30
 
-int entity_new(int* playerdata,int *Yplayer,int* Xplayer,int (*map)[xmap])
+#ifdef xmap
+#else
+#error undefined data
+#error code=3
+#error xmap is not define
+#endif
+
+#ifdef ymap
+#else
+#error undefined data
+#error code=3
+#error ymap is not defined
+#endif
+
+int entity_new(int* input,int *Yentity,int* Xentity,int (*map)[xmap])
 {
-        scanf(" %c",(char*)playerdata);
+        scanf(" %c",(char*)input);
 
-        switch(*playerdata)
+        switch(*input)
                 {
                 case 'w':
-                        if(map[*Yplayer-1][*Xplayer]!='#')
-                        *Yplayer-=1;
+                        if(map[*Yentity-1][*Xentity]!='#')
+                        *Yentity-=1;
                 break;
 
                 case 's':
-                        if(map[*Yplayer+1][*Xplayer]!='#')
-                        *Yplayer+=1;
+                        if(map[*Yentity+1][*Xentity]!='#')
+                        *Yentity+=1;
                 break;
 
                 case 'a':
-                        if(map[*Yplayer][*Xplayer-1]!='#')
-                        *Xplayer-=1;
+                        if(map[*Yentity][*Xentity-1]!='#')
+                        *Xentity-=1;
                 break;
 
                 case 'd':
-                        if(map[*Yplayer][*Xplayer+1]!='#')
-                        *Xplayer+=1;
+                        if(map[*Yentity][*Xentity+1]!='#')
+                        *Xentity+=1;
                 break;
                     
                 case 'x':
